@@ -178,9 +178,18 @@ WSGInterface::SendCommandAndAwaitStatus(const WSGRawCommandMessage& command,
   return response;
 }
 
+bool WSGInterface::StartGripper()
+{
+  const WSGRawCommandMessage command(kAcknowledgeStopOrFault);
+  const bool result = CommandGripper(command);
+  return result;
+}
+
 bool WSGInterface::StopGripper()
 {
-  const WSGRawCommandMessage stop_command(kStop);
+  // const WSGRawCommandMessage stop_command(kStop);
+  // TODO(eric.couisneau): Why? I dunno.
+  const WSGRawCommandMessage stop_command(kDisconnectAnnounce);
   const bool result = CommandGripper(stop_command);
   return result;
 }
@@ -539,6 +548,11 @@ bool WSGInterface::InitializeGripper(bool enable_recurring_status)
     {
       throw std::runtime_error("Failed to enable recurring kGetForce");
     }
+  }
+  Log("Start the gripper...");
+  success &= StartGripper();
+  if (!success) {
+    throw std::runtime_error("Failed to start gripper");
   }
   // Home the gripper
   Log("Homing the gripper...");

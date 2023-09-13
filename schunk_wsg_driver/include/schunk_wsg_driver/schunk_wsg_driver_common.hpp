@@ -436,6 +436,8 @@ protected:
   double GetCommandEffortN(const double target_effort,
                            const PhysicalLimits& limits);
 
+  bool StartGripper();
+
   bool StopGripper();
 
   enum HomeDirection : uint8_t {kDefault=0,

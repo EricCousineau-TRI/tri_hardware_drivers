@@ -247,12 +247,16 @@ void WSGTCPInterface::ShutdownConnection()
   active_.store(false);
   Log("Waiting for recv thread to terminate...");
   recv_thread_.join();
-  // Shutdown socket
-  const int shutdown_res = shutdown(socket_fd_, SHUT_RDWR);
-  if (shutdown_res != 0)
+  Log("Close socket...");
+  // TODO(eric.cousineau): Calling shutdown here causes the gripper to stop.
+  // This would not be a problem, but I (Eric) cannot seem to get the gripper]
+  // to restart.
+  // const int shutdown_res = shutdown(socket_fd_, SHUT_RDWR);
+  const int close_res = close(socket_fd_);
+  if (close_res != 0)
   {
     perror(nullptr);
-    throw std::runtime_error("Failed to shutdown socket");
+    throw std::runtime_error("Failed to close socket");
   }
   socket_fd_ = -1;
   Log("...finished cleanup");
