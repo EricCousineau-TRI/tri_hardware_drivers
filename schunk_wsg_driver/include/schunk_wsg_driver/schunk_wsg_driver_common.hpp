@@ -399,6 +399,7 @@ private:
   OwningMaybe<PhysicalLimits> maybe_physical_limits_;
   GripperMotionStatus motion_status_;
   std::function<void(const std::string&)> logging_fn_;
+  bool enabled_recurring_status_{};
 
 public:
 
@@ -409,7 +410,7 @@ public:
 
   inline void Log(const std::string& message) { logging_fn_(message); }
 
-  bool InitializeGripper();
+  bool InitializeGripper(bool enable_recurring_status = true);
 
   bool SetTargetPositionSpeedEffort(const double target_position,
                                     const double max_speed,
